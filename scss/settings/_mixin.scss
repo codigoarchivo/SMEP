@@ -1,0 +1,50 @@
+@mixin responde($breakpoint) {
+  @if $breakpoint == middle-phone {
+    // 30em * 16px = 480px  or 480px / 16px = 30em MIDDLE PHONE <<<<<
+    @media only screen and (max-width: 30em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == big-phone {
+    // 37.5em * 16px = 600px or 600px / 16px = 37.5em BIG PHONE <<<<<
+    @media only screen and (max-width: 37.5em) {
+      @content;
+    }
+  }
+  
+  @if $breakpoint == big-phone-max {
+    // 54.6em * 16px = 875px or 875px / 16px = 54.6em BIG PHONE <<<<<
+    @media only screen and (max-width: 54.6em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == big-phone-min {
+    // 54.6em * 16px = 875px or 875px / 16px = 54.6em BIG PHONE <<<<<
+    @media only screen and (min-width: 54.6em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tab-port {
+    // 56.25em * 16px = 900px or 900px / 16px = 56.25em TABLET PORTRAIT <<<<<
+    @media only screen and (max-width: 56.25em) {
+      @content;
+    }
+  }
+
+  @if $breakpoint == tab-land {
+    // 75em * 16px = 1200px or 1200px / 16px = 75em TABLET LANDSCAPE <<<<<
+    @media only screen and (max-width: 75em) {
+      @content;
+    }
+  }
+  
+  @if $breakpoint == middle-desktop {
+    // 96em * 16px = 1536px 1536px / 16px = 96em MIDDLE DESKTOP <<<<<
+    @media only screen and (min-width: 96em) {
+      @content;
+    }
+  }
+}

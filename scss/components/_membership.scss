@@ -1,0 +1,235 @@
+section {
+  &.pricing-section {
+    width: 100%;
+    height: 100vh;
+    .pricing {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      .pricing-header {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: $primary-dark-b;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 12px;
+        padding: 5px 70px;
+        border-radius: 0px 0px 10px 10px;
+        box-shadow: $primary-shadow;
+        p {
+          font-weight: 300;
+        }
+        h3 {
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          -moz-column-gap: 5px;
+          column-gap: 5px;
+        }
+      }
+    }
+  }
+}
+
+.pricing-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 25px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .pricing-body-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 15px;
+    h2 {
+      font-weight: 500;
+    }
+    .pricing-checkbox {
+      display: flex;
+      -moz-column-gap: 10px;
+      column-gap: 10px;
+      align-items: center;
+      span {
+        font-size: 14px;
+        color: $primary-ligth-dark;
+      }
+      & > div {
+        width: 45px;
+        background: $primary-dark-b;
+        height: 24px;
+        border-radius: 15px;
+        position: relative;
+        cursor: pointer;
+        div {
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          background-color: $primary-ligth;
+          top: 50%;
+          left: 3px;
+          transform: translateY(-50%);
+          border-radius: 50%;
+        }
+        &.anually {
+          div {
+            left: unset;
+            right: 3px;
+          }
+        }
+      }
+    }
+  }
+
+  .pricing-body-plans {
+    display: flex;
+    -moz-column-gap: 17px;
+    column-gap: 17px;
+    .card {
+      background-color: $primary-dark;
+      padding: 25px;
+      width: 270px;
+      position: relative;
+      .card-header {
+        display: flex;
+        flex-direction: column;
+        row-gap: 8px;
+        justify-content: center;
+        align-items: center;
+        .card-title {
+          font-weight: 400;
+          font-size: 14px;
+        }
+        .card-price {
+          font-size: 26px;
+        }
+        .card-users {
+          padding: 0.5rem;
+          background: $primary-dark-b;
+          color: $primary-ligth;
+          input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid currentColor;
+            padding: 10px;
+            color: currentColor;
+            text-align: center;
+            outline: none;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+          }
+          span {
+            font-size: 12px;
+            color: currentColor;
+          }
+        }
+      }
+      .card-body {
+        margin-top: 30px;
+        ul {
+          list-style-type: none;
+          margin-left: 20px;
+          display: flex;
+          flex-direction: column;
+          row-gap: 8px;
+          li {
+            color: $primary-ligth-dark;
+            position: relative;
+            font-size: 14px;
+            &::before {
+              content: "•";
+              color: $primary-dark-b;
+              font-weight: bold;
+              width: 20px;
+              margin-left: -18px;
+              font-size: 25px;
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+            }
+          }
+        }
+      }
+      .card-footer {
+        margin-top: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button {
+          background: $primary-dark-b;
+          color: $primary-ligth;
+          padding: 10px 25px;
+          cursor: pointer;
+          &:hover {
+            transition: 0.3s all;
+            background: $primary-dark;
+            color: $primary-ligth;
+          }
+        }
+      }
+    }
+  }
+}
+
+@include responde(big-phone) {
+  section.pricing-section {
+    width: 100%;
+    height: auto;
+
+    .pricing {
+      .pricing-header {
+        width: 60%;
+        padding: 20px 50px;
+      }
+      .pricing-body {
+        margin-top: 780px;
+        padding-bottom: 50px;
+        .pricing-body-plans {
+          > div {
+            > div {
+              flex-direction: column;
+              row-gap: 17px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include responde(big-phone) {
+  section.pricing-section {
+    .pricing {
+      &-header {
+        width: 100%;
+        padding: 20px 50px;
+        position: unset;
+        top: unset;
+        left: unset;
+        transform: unset;
+        p {
+          font-size: 14px;
+        }
+        h3 {
+          font-size: 18px;
+        }
+      }
+      &-body {
+        margin-top: 50px;
+        position: unset;
+        top: unset;
+        left: unset;
+        transform: unset;
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+.box-shadow {
+  border-radius: 10px;
+  box-shadow: $primary-shadow;
+}
+
+.bg--light {
+  background-color: $primary-ligth;
+  color: $primary-dark-b;
+}
+
+.bg--dark {
+  background-color: $primary-dark;
+  color: $primary-ligth;
+}
+
+.text-light {
+  color: $primary-dark-b;
+  text-decoration: none;
+}
+.text-dark {
+  color: $primary-ligth;
+  text-decoration: none;
+}
