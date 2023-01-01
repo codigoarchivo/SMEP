@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NextPage } from "next";
 import { Container } from "@mui/material";
+import { useForm } from "react-hook-form";
 
 const membership: NextPage = () => {
   const [toggle, setToggle] = useState(false);
@@ -8,6 +9,14 @@ const membership: NextPage = () => {
   const handleCheck = () => {
     setToggle(!toggle);
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleSelected = () => {};
 
   return (
     <Container>
@@ -36,7 +45,7 @@ const membership: NextPage = () => {
             </div>
             <div className="pricing-body-plans">
               {toggle ? (
-                <>
+                <form onSubmit={handleSubmit(handleSelected)} noValidate>
                   <div className="card box-shadow">
                     <div className="card-header">
                       <span className="card-title">Starter</span>
@@ -106,9 +115,9 @@ const membership: NextPage = () => {
                       <button className="box-shadow">Contact Us</button>
                     </div>
                   </div>
-                </>
+                </form>
               ) : (
-                <>
+                <form onSubmit={handleSubmit(handleSelected)} noValidate>
                   <div className="card box-shadow">
                     <div className="card-header">
                       <span className="card-title">Starter</span>
@@ -131,7 +140,7 @@ const membership: NextPage = () => {
                   <div className="card box-shadow">
                     <div className="card-header">
                       <span className="card-title">Pro</span>
-                      <h2 className="card-price">   
+                      <h2 className="card-price">
                         $99<span>/month</span>
                       </h2>
                       <div className="card-users box-shadow">
@@ -180,7 +189,7 @@ const membership: NextPage = () => {
                       <button className="box-shadow">Contact Us</button>
                     </div>
                   </div>
-                </>
+                </form>
               )}
             </div>
           </div>
