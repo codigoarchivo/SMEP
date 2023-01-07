@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { NextPage } from "next";
 import { Container } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { member } from "../database";
+import { IMembership } from "../interfaces";
 
 const membership: NextPage = () => {
   const [toggle, setToggle] = useState(false);
@@ -10,13 +11,9 @@ const membership: NextPage = () => {
     setToggle(!toggle);
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const handleSelected = () => {};
+  const handleSelected = (data: IMembership) => {
+    console.log(data);
+  };
 
   return (
     <Container>
@@ -43,13 +40,55 @@ const membership: NextPage = () => {
                 <span>Billed anually</span>
               </div>
             </div>
-            <div className="pricing-body-plans">
-              {toggle ? (
-                <form onSubmit={handleSubmit(handleSelected)} noValidate>
+
+            {!toggle ? (
+              <div className="pricing-base">
+                {member.membership.map((item) => (
+                  <div key={item.title} className="pricing-body-plans">
+                    <div className="card box-shadow">
+                      <div className="card-header">
+                        <h1 className="card-title">{item.title}</h1>
+                      </div>
+                      <div className="card-body">
+                        <ul>
+                          <li>
+                            <span>{item.seccion1.slice(0, -4)}</span>
+                            <span>{item.seccion1.slice(8, 13)}</span>
+                          </li>
+                          <li>
+                            <span>{item.seccion2.slice(0, -4)}</span>
+                            <span>{item.seccion2.slice(11, 16)}</span>
+                          </li>
+
+                          {item?.seccion3 && (
+                            <li>
+                              <span>{item?.seccion3.slice(0, -4)}</span>
+                              <span>{item?.seccion3.slice(11, 16)}</span>
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                      <div className="card-footer">
+                        <button
+                          className="box-shadow"
+                          onClick={() => handleSelected(item)}
+                        >
+                          Choose Plan
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="pricing-base">
+                <div className="pricing-body-plans">
                   <div className="card box-shadow">
                     <div className="card-header">
-                      <span className="card-title">Starter</span>
-                      <h2 className="card-price">$30</h2>
+                      <span className="card-title">
+                        E(Empresarial) afiliación de tienda virtual
+                      </span>
+                      <h2 className="card-price">50$ 1/año</h2>
                     </div>
                     <div className="card-body">
                       <ul>
@@ -65,133 +104,9 @@ const membership: NextPage = () => {
                       <button className="box-shadow">Choose Plan</button>
                     </div>
                   </div>
-                  <div className="card box-shadow">
-                    <div className="card-header">
-                      <span className="card-title">Pro</span>
-                      <h2 className="card-price">$50</h2>
-                      <div className="card-users box-shadow">
-                        <input
-                          list="pro__users__limit"
-                          name="pro__users__input"
-                          id="pro__users__input"
-                        />
-                        <datalist id="pro__users__limit">
-                          <option value="50 MAUs" />
-                          <option value="100 MAUs" />
-                          <option value="500 MAUs" />
-                          <option value="1000 MAUs" />
-                          <option value="2500 MAUs" />
-                        </datalist>
-                        <span>Monthly active users</span>
-                      </div>
-                    </div>
-                    <div className="card-body">
-                      <ul>
-                        <li>All starter features, plus:</li>
-                        <li>Unlimited projects</li>
-                        <li>Unlimited fully customizable themes</li>
-                        <li>A dedicated Customer Success Manager</li>
-                      </ul>
-                    </div>
-                    <div className="card-footer">
-                      <button className="box-shadow">Choose Plan</button>
-                    </div>
-                  </div>
-                  <div className="card box-shadow">
-                    <div className="card-header">
-                      <span className="card-title">Enterprise</span>
-                      <h2 className="card-price">Let's Talk!</h2>
-                    </div>
-                    <div className="card-body">
-                      <ul>
-                        <li>All Pro features</li>
-                        <li>Unlimited MAUs</li>
-                        <li>Dedicated environment</li>
-                        <li>Enterprise account administration</li>
-                        <li>Premium support and services</li>
-                      </ul>
-                    </div>
-                    <div className="card-footer">
-                      <button className="box-shadow">Contact Us</button>
-                    </div>
-                  </div>
-                </form>
-              ) : (
-                <form onSubmit={handleSubmit(handleSelected)} noValidate>
-                  <div className="card box-shadow">
-                    <div className="card-header">
-                      <span className="card-title">Starter</span>
-                      <h2 className="card-price">$19/month</h2>
-                    </div>
-                    <div className="card-body">
-                      <ul>
-                        <li>500 MAUs</li>
-                        <li>3 projects</li>
-                        <li>Unlimited guides</li>
-                        <li>Unlimited flows</li>
-                        <li>Unlimited branded themes</li>
-                        <li>Email support</li>
-                      </ul>
-                    </div>
-                    <div className="card-footer">
-                      <button className="box-shadow">Choose Plan</button>
-                    </div>
-                  </div>
-                  <div className="card box-shadow">
-                    <div className="card-header">
-                      <span className="card-title">Pro</span>
-                      <h2 className="card-price">
-                        $99<span>/month</span>
-                      </h2>
-                      <div className="card-users box-shadow">
-                        <input
-                          list="pro__users__limit"
-                          name="pro__users__input"
-                          id="pro__users__input"
-                        />
-                        <datalist id="pro__users__limit">
-                          <option value="50 MAUs" />
-                          <option value="100 MAUs" />
-                          <option value="500 MAUs" />
-                          <option value="1000 MAUs" />
-                          <option value="2500 MAUs" />
-                        </datalist>
-                        <span>Monthly active users</span>
-                      </div>
-                    </div>
-                    <div className="card-body">
-                      <ul>
-                        <li>All starter features, plus:</li>
-                        <li>Unlimited projects</li>
-                        <li>Unlimited fully customizable themes</li>
-                        <li>A dedicated Customer Success Manager</li>
-                      </ul>
-                    </div>
-                    <div className="card-footer">
-                      <button className="box-shadow">Choose Plan</button>
-                    </div>
-                  </div>
-                  <div className="card box-shadow">
-                    <div className="card-header">
-                      <span className="card-title">Enterprise</span>
-                      <h2 className="card-price">Let's Talk!</h2>
-                    </div>
-                    <div className="card-body">
-                      <ul>
-                        <li>All Pro features</li>
-                        <li>Unlimited MAUs</li>
-                        <li>Dedicated environment</li>
-                        <li>Enterprise account administration</li>
-                        <li>Premium support and services</li>
-                      </ul>
-                    </div>
-                    <div className="card-footer">
-                      <button className="box-shadow">Contact Us</button>
-                    </div>
-                  </div>
-                </form>
-              )}
-            </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
