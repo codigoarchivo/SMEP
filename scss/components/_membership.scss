@@ -5,7 +5,7 @@ section {
     .pricing {
       width: 100%;
       height: 100%;
-      .pricing-header {
+      &-header {
         width: 60%;
         margin: 0 auto;
         background-color: $primary-dark-b;
@@ -38,15 +38,18 @@ section {
   flex-direction: column;
   align-items: center;
   row-gap: 25px;
-  .pricing-body-header {
+  padding-bottom: 50px;
+  &-header {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     row-gap: 15px;
+
     h2 {
       font-weight: 500;
     }
+
     .pricing-checkbox {
       display: flex;
       -moz-column-gap: 10px;
@@ -82,23 +85,21 @@ section {
       }
     }
   }
-  .pricing-base {
+
+  &-plans {
     display: flex;
     gap: 17px;
     flex-wrap: wrap;
     justify-content: center;
-  }
-  .pricing-body-plans {
-    display: flex;
-    -moz-column-gap: 17px;
-    column-gap: 17px;
+
     .card {
       background-color: $primary-dark;
       padding: 25px;
       width: 250px;
       position: relative;
       display: grid;
-      .card-header {
+
+      &-header {
         display: flex;
         flex-direction: column;
         row-gap: 8px;
@@ -108,13 +109,15 @@ section {
           font-weight: bold;
           font-size: 20px;
           text-align: center;
+          color: $primary-ligth;
         }
         .card-price {
           font-weight: 400;
           font-size: 26px;
         }
       }
-      .card-body {
+
+      &-body {
         margin-top: 30px;
         ul {
           display: flex;
@@ -130,7 +133,8 @@ section {
           }
         }
       }
-      .card-footer {
+
+      &-footer {
         margin-top: 35px;
         display: flex;
         justify-content: center;
@@ -157,46 +161,8 @@ section {
     height: auto;
 
     .pricing {
-      .pricing-header {
-        width: 100%;
-      }
-      .pricing-body {
-        padding-bottom: 50px;
-        .pricing-body-plans {
-          > div {
-            > div {
-              flex-direction: column;
-              row-gap: 17px;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-@include responde(big-phone) {
-  section.pricing-section {
-    .pricing {
       &-header {
         width: 100%;
-        padding: 20px 50px;
-        position: unset;
-        top: unset;
-        left: unset;
-        transform: unset;
-        p {
-          font-size: 14px;
-        }
-        h3 {
-          font-size: 18px;
-        }
-      }
-      &-body {
-        position: unset;
-        top: unset;
-        left: unset;
-        transform: unset;
       }
     }
   }
