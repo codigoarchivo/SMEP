@@ -1,19 +1,48 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { NextPage } from 'next';
 import { Paper, Button, Container } from '@mui/material';
 import { member } from '../database';
 import { IMembership } from '../interfaces';
+import { calcAge } from '../helpers';
+import { MembershipContext } from '../context/membership';
+import { useRouter } from 'next/router';
 
 const membership: NextPage = () => {
   const [toggle, setToggle] = useState(false);
+  const { selectedSesion, selectedBusiness } = useContext(MembershipContext);
+  const { push } = useRouter();
 
   const handleCheck = () => {
     setToggle(!toggle);
   };
 
   const handleSelected = (data: IMembership) => {
-    console.log(data);
+    toggle
+      ? selectedBusiness({
+          ...data,
+          age: Number(data.price!.slice(6, 8).trim()),
+          priceMonth: Number(data.price!.slice(0, 1).trim()),
+          price:
+            Number(data.price!.slice(0, 1).trim()) *
+            calcAge(Number(data.price!.slice(6, 8).trim())),
+        })
+      : selectedSesion({
+          title: data.title,
+          sesion1: {
+            description: data.desc1,
+            price: Number(data.desc1.slice(8, 12).trim()),
+            nSesion: Number(data.desc1.slice(0, 1).trim()),
+          },
+          sesion2: {
+            description: data.desc2,
+            price: Number(data.desc2.slice(11, 14).trim()),
+            nSesion: Number(data.desc2.slice(0, 1).trim()),
+          },
+        });
+    push('/selectMembership');
   };
+
+  const data: IMembership[] = toggle ? member.membershiAge : member.membership;
 
   return (
     <Container>
@@ -26,7 +55,7 @@ const membership: NextPage = () => {
             <div className='pricing-body-header'>
               <h2>Elige un plan</h2>
               <div className='pricing-checkbox'>
-                <span style={{ color: !toggle ? '#000000' : '' }}>
+                <span className={!toggle ? 'text-light' : ''}>
                   Facturado por sesiones
                 </span>
                 <div
@@ -36,104 +65,59 @@ const membership: NextPage = () => {
                 >
                   <div className='annual'></div>
                 </div>
-                <span style={{ color: !toggle ? '' : '#000000' }}>
+                <span className={toggle ? 'text-light' : ''}>
                   Facturado anualmente
                 </span>
               </div>
             </div>
 
-            {toggle ? (
-              <div className='pricing-body-plans'>
-                <Paper className='card' elevation={2}>
-                  <div className='card-header'>
-                    <span className='card-title'>
-                      E(Empresarial) <br /> Plus, afiliación de tienda virtual
-                    </span>
-                    <h2 className='card-price'>7$/mes 1 un año</h2>
-                  </div>
-                  <div className='card-body'>
-                    <ul>
-                      <li>Publicación ilimitada</li>
-                      <li>Link a su página</li>
-                    </ul>
-                  </div>
-                  <div className='card-footer'>
-                    <Button color='primary'>Elija plan</Button>
-                  </div>
-                </Paper>
-                <Paper className='card' elevation={2}>
-                  <div className='card-header'>
-                    <span className='card-title'>
-                      E(Empresarial) Profesional, afiliación de tienda virtual
-                    </span>
-                    <h2 className='card-price'>6$/mes 2 años</h2>
-                  </div>
-                  <div className='card-body'>
-                    <ul>
-                      <li>Publicación ilimitada</li>
-                      <li>Link a su página</li>
-                    </ul>
-                  </div>
-                  <div className='card-footer'>
-                    <Button color='primary'>Elija plan</Button>
-                  </div>
-                </Paper>
-                <Paper className='card' elevation={2}>
-                  <div className='card-header'>
-                    <span className='card-title'>
-                      E(Empresarial) Premium, afiliación de tienda virtual
-                    </span>
-                    <h2 className='card-price'>5$/mes 3 años</h2>
-                  </div>
-                  <div className='card-body'>
-                    <ul>
-                      <li>Publicación ilimitada</li>
-                      <li>Link a su página</li>
-                    </ul>
-                  </div>
-                  <div className='card-footer'>
-                    <Button color='primary'>Elija plan</Button>
-                  </div>
-                </Paper>
-              </div>
-            ) : (
-              <div className='pricing-body-plans'>
-                {member.membership.map((item) => (
+            <div className='pricing-body-plans'>
+              <>
+                {data.map((item) => (
                   <Paper key={item.title} className='card' elevation={2}>
                     <div className='card-header'>
-                      <h1 className='card-title'>{item.title}</h1>
+                      <span className='card-title'>{item.title}</span>
+                      <h2 className='card-price'>{item.price}</h2>
                     </div>
                     <div className='card-body'>
                       <ul>
-                        <li>
-                          <span>{item.seccion1.slice(0, -4)}</span>
-                          <span>{item.seccion1.slice(8, 13)}</span>
-                        </li>
-                        <li>
-                          <span>{item.seccion2.slice(0, -4)}</span>
-                          <span>{item.seccion2.slice(11, 16)}</span>
-                        </li>
-
-                        {item?.seccion3 && (
+                        {toggle ? (
+                          <>
+                            <li>{item.desc1}</li>
+                            <li>{item.desc2}</li>
+                          </>
+                        ) : (
+                          <>
+                            <li>
+                              <span>{item.desc1.slice(0, -4)}</span>
+                              <span>{item.desc1.slice(8, 13)}</span>
+                            </li>
+                            <li>
+                              <span>{item.desc2.slice(0, -4)}</span>
+                              <span>{item.desc2.slice(11, 16)}</span>
+                            </li>
+                          </>
+                        )}
+                        {item?.desc3 && (
                           <li>
-                            <span>{item?.seccion3.slice(0, -4)}</span>
-                            <span>{item?.seccion3.slice(11, 16)}</span>
+                            <span>{item?.desc3.slice(0, -4)}</span>
+                            <span>{item?.desc3.slice(11, 16)}</span>
                           </li>
                         )}
                       </ul>
                     </div>
                     <div className='card-footer'>
                       <Button
-                        color='primary'
                         onClick={() => handleSelected(item)}
+                        color='primary'
                       >
                         Elija plan
                       </Button>
                     </div>
                   </Paper>
                 ))}
-              </div>
-            )}
+              </>
+            </div>
           </div>
         </div>
       </section>
