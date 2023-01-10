@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { NextPage } from "next";
-import { Container } from "@mui/material";
-import { member } from "../database";
-import { IMembership } from "../interfaces";
+import { useState } from 'react';
+import { NextPage } from 'next';
+import { Paper, Button, Container } from '@mui/material';
+import { member } from '../database';
+import { IMembership } from '../interfaces';
 
 const membership: NextPage = () => {
   const [toggle, setToggle] = useState(false);
@@ -17,38 +17,93 @@ const membership: NextPage = () => {
 
   return (
     <Container>
-      <section className="pricing-section">
-        <div className="pricing">
-          <div className="pricing-header">
-            <p>Your current plan:</p>
-            <h3>
-              Starter Trial <span>•</span> 500MAUs
-            </h3>
+      <section className='pricing-section'>
+        <div className='pricing'>
+          <div className='pricing-header'>
+            <h3>E D G A R ' S P E N D U L U M</h3>
           </div>
-          <div className="pricing-body">
-            <div className="pricing-body-header">
-              <h2>Choose a plan</h2>
-              <div className="pricing-checkbox">
-                <span>Billed monthly</span>
+          <div className='pricing-body'>
+            <div className='pricing-body-header'>
+              <h2>Elige un plan</h2>
+              <div className='pricing-checkbox'>
+                <span style={{ color: !toggle ? '#000000' : '' }}>
+                  Facturado por sesiones
+                </span>
                 <div
-                  className={!toggle ? "anually" : ""}
+                  className={toggle ? 'anually' : ''}
                   onClick={handleCheck}
-                  id="custom-checkbox"
+                  id='custom-checkbox'
                 >
-                  <div className="annual"></div>
+                  <div className='annual'></div>
                 </div>
-                <span>Billed anually</span>
+                <span style={{ color: !toggle ? '' : '#000000' }}>
+                  Facturado anualmente
+                </span>
               </div>
             </div>
 
-            {!toggle ? (
-              <div className="pricing-body-plans">
+            {toggle ? (
+              <div className='pricing-body-plans'>
+                <Paper className='card' elevation={2}>
+                  <div className='card-header'>
+                    <span className='card-title'>
+                      E(Empresarial) <br /> Plus, afiliación de tienda virtual
+                    </span>
+                    <h2 className='card-price'>7$/mes 1 un año</h2>
+                  </div>
+                  <div className='card-body'>
+                    <ul>
+                      <li>Publicación ilimitada</li>
+                      <li>Link a su página</li>
+                    </ul>
+                  </div>
+                  <div className='card-footer'>
+                    <Button color='primary'>Elija plan</Button>
+                  </div>
+                </Paper>
+                <Paper className='card' elevation={2}>
+                  <div className='card-header'>
+                    <span className='card-title'>
+                      E(Empresarial) Profesional, afiliación de tienda virtual
+                    </span>
+                    <h2 className='card-price'>6$/mes 2 años</h2>
+                  </div>
+                  <div className='card-body'>
+                    <ul>
+                      <li>Publicación ilimitada</li>
+                      <li>Link a su página</li>
+                    </ul>
+                  </div>
+                  <div className='card-footer'>
+                    <Button color='primary'>Elija plan</Button>
+                  </div>
+                </Paper>
+                <Paper className='card' elevation={2}>
+                  <div className='card-header'>
+                    <span className='card-title'>
+                      E(Empresarial) Premium, afiliación de tienda virtual
+                    </span>
+                    <h2 className='card-price'>5$/mes 3 años</h2>
+                  </div>
+                  <div className='card-body'>
+                    <ul>
+                      <li>Publicación ilimitada</li>
+                      <li>Link a su página</li>
+                    </ul>
+                  </div>
+                  <div className='card-footer'>
+                    <Button color='primary'>Elija plan</Button>
+                  </div>
+                </Paper>
+              </div>
+            ) : (
+              <div className='pricing-body-plans'>
                 {member.membership.map((item) => (
-                  <div key={item.title} className="card box-shadow">
-                    <div className="card-header">
-                      <h1 className="card-title">{item.title}</h1>
+                  <Paper key={item.title} className='card' elevation={2}>
+                    <div className='card-header'>
+                      <h1 className='card-title'>{item.title}</h1>
                     </div>
-                    <div className="card-body">
+                    <div className='card-body'>
                       <ul>
                         <li>
                           <span>{item.seccion1.slice(0, -4)}</span>
@@ -67,40 +122,16 @@ const membership: NextPage = () => {
                         )}
                       </ul>
                     </div>
-                    <div className="card-footer">
-                      <button
-                        className="box-shadow"
+                    <div className='card-footer'>
+                      <Button
+                        color='primary'
                         onClick={() => handleSelected(item)}
                       >
-                        Choose Plan
-                      </button>
+                        Elija plan
+                      </Button>
                     </div>
-                  </div>
+                  </Paper>
                 ))}
-              </div>
-            ) : (
-              <div className="pricing-body-plans">
-                <div className="card box-shadow">
-                  <div className="card-header">
-                    <span className="card-title">
-                      E(Empresarial) afiliación de tienda virtual
-                    </span>
-                    <h2 className="card-price">50$ 1/año</h2>
-                  </div>
-                  <div className="card-body">
-                    <ul>
-                      <li>500 MAUs</li>
-                      <li>3 projects</li>
-                      <li>Unlimited guides</li>
-                      <li>Unlimited flows</li>
-                      <li>Unlimited branded themes</li>
-                      <li>Email support</li>
-                    </ul>
-                  </div>
-                  <div className="card-footer">
-                    <button className="box-shadow">Choose Plan</button>
-                  </div>
-                </div>
               </div>
             )}
           </div>
