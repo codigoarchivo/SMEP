@@ -3,30 +3,31 @@ section {
     width: 100%;
     height: 100vh;
     .pricing {
-      width: 100%;
+      display: flex;
+      flex-direction: column;
       height: 100%;
+      row-gap: 36px;
+      width: 100%;
       &-header {
-        width: 60%;
-        margin: 0 auto;
-        background-color: $primary-dark-b;
-        color: white;
+        align-items: center;
+        border-radius: 0px 0px 10px 10px;
+        box-shadow: $primary-shadow;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
-        row-gap: 12px;
+        margin: 0 auto;
         padding: 5px;
-        border-radius: 0px 0px 10px 10px;
-        box-shadow: $primary-shadow;
+        row-gap: 12px;
+        width: 60%;
         p {
           font-weight: 300;
         }
         h3 {
-          font-weight: 500;
-          display: flex;
-          align-items: center;
           -moz-column-gap: 5px;
+          align-items: center;
           column-gap: 5px;
+          display: flex;
+          font-weight: 500;
         }
       }
     }
@@ -34,16 +35,16 @@ section {
 }
 
 .pricing-body {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  row-gap: 25px;
   padding-bottom: 50px;
+  row-gap: 25px;
   &-header {
+    align-items: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     row-gap: 15px;
 
     h2 {
@@ -51,30 +52,30 @@ section {
     }
 
     .pricing-checkbox {
-      display: flex;
       -moz-column-gap: 10px;
-      column-gap: 10px;
       align-items: center;
+      column-gap: 10px;
+      display: flex;
       span {
         font-size: 14px;
         color: $primary-ligth-dark;
       }
       & > div {
-        width: 45px;
         background: $primary-dark-b;
-        height: 24px;
         border-radius: 15px;
+        height: 24px;
         position: relative;
+        width: 45px;
         cursor: pointer;
         div {
-          position: absolute;
-          width: 18px;
-          height: 18px;
           background-color: $primary-ligth;
-          top: 50%;
-          left: 3px;
-          transform: translateY(-50%);
           border-radius: 50%;
+          height: 18px;
+          left: 3px;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 18px;
         }
         &.anually {
           div {
@@ -88,28 +89,25 @@ section {
 
   &-plans {
     display: flex;
-    gap: 17px;
     flex-wrap: wrap;
+    gap: 17px;
     justify-content: center;
 
     .card {
-      background-color: $primary-dark;
-      padding: 25px;
-      width: 250px;
-      position: relative;
       display: grid;
-
+      padding: 25px;
+      position: relative;
+      width: 250px;
       &-header {
+        align-items: center;
         display: flex;
         flex-direction: column;
-        row-gap: 8px;
         justify-content: center;
-        align-items: center;
+        row-gap: 8px;
         .card-title {
-          font-weight: bold;
           font-size: 20px;
+          font-weight: bold;
           text-align: center;
-          color: $primary-ligth;
         }
         .card-price {
           font-weight: 400;
@@ -124,30 +122,25 @@ section {
           flex-direction: column;
           gap: 20px;
           li {
-            list-style: none;
-            color: $primary-ligth-dark;
-            position: relative;
-            font-size: 16px;
             display: flex;
+            font-size: 16px;
             justify-content: space-between;
+            list-style: none;
+            position: relative;
           }
         }
       }
 
       &-footer {
-        margin-top: 35px;
+        align-items: center;
         display: flex;
         justify-content: center;
-        align-items: center;
+        margin-top: 35px;
         button {
-          background: $primary-dark-b;
-          color: $primary-ligth;
           padding: 10px 25px;
           cursor: pointer;
           &:hover {
             transition: 0.3s all;
-            background: $primary-dark;
-            color: $primary-ligth;
           }
         }
       }
@@ -157,8 +150,8 @@ section {
 
 @include responde(big-phone) {
   section.pricing-section {
-    width: 100%;
     height: auto;
+    width: 100%;
 
     .pricing {
       &-header {
