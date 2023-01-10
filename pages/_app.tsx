@@ -1,11 +1,13 @@
-import type { AppProps } from 'next/app';
-import { ColorsProvider } from '../context/colors';
-import '../scss/styles.scss';
+import type { AppProps } from "next/app";
+import { ColorsProvider, MembershipProvider } from "../context";
+import "../scss/styles.scss";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ColorsProvider>
-      <Component {...pageProps} />
-    </ColorsProvider>
-  )
+    <MembershipProvider>
+      <ColorsProvider>
+        <Component {...pageProps} />
+      </ColorsProvider>
+    </MembershipProvider>
+  );
 }
