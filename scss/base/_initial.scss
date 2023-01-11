@@ -30,3 +30,27 @@ body {
   color: $primary-ligth;
   text-decoration: none;
 }
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="time"],
+input[type="url"],
+input[type="datetime-local"],
+textarea,
+select {
+  border: none;
+  font-size: 16px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 15px;
+  width: 100%;
+  background-color: $primary-ligth-dark;
+  box-shadow: $primary-shadow-ligth;
+}
