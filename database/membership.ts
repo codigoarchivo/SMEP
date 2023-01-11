@@ -47,6 +47,12 @@ export const membership: IMembership[] = [
         desc1: '1 sesión 300$',
         desc2: '2 sesiones 500$',
     },
+    {
+        title: 'Enfoque deportivo',
+        desc1: '1 sesión 150$',
+        desc2: '2 sesiones 200$',
+        desc3: '3 sesiones 250$',
+    },
 ]
 
 export const membershiAge: IMembership[] = [
