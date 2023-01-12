@@ -22,7 +22,7 @@ export const MembershipProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     const cookieSesion = Cookies.get('sesion')
       ? JSON.parse(Cookies.get('sesion')!)
-      : [];
+      : {};
     try {
       dispatch({ type: '[Sesion] - Select', payload: cookieSesion });
     } catch (error) {
@@ -33,7 +33,7 @@ export const MembershipProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     const cookieBusiness = Cookies.get('business')
       ? JSON.parse(Cookies.get('business')!)
-      : [];
+      : {};
     try {
       dispatch({ type: '[Business] - Select', payload: cookieBusiness });
     } catch (error) {
