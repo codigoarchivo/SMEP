@@ -1,21 +1,15 @@
 import { MembershipState } from './';
-import { IBusiness, ISesion } from '../../interfaces';
+import { ICheck } from '../../interfaces';
 
 type MembershipActionType =
-    | { type: '[Sesion] - Select', payload: ISesion }
-    | { type: '[Business] - Select', payload: IBusiness }
+    | { type: '[Check] - all', payload: ICheck }
 
 export const MembershipReducer = (state: MembershipState, action: MembershipActionType): MembershipState => {
     switch (action.type) {
-        case '[Sesion] - Select':
+        case '[Check] - all':
             return {
                 ...state,
-                sesion: action.payload
-            }
-        case '[Business] - Select':
-            return {
-                ...state,
-                business: action.payload
+                check: action.payload
             }
         default:
             return state;
