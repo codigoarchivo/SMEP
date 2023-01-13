@@ -13,7 +13,8 @@ type FormData = {
 };
 
 const selectMembership = () => {
-  const { sesion, business } = useContext(MembershipContext);
+  const { check } = useContext(MembershipContext);
+
   const {
     register,
     handleSubmit,
@@ -30,35 +31,7 @@ const selectMembership = () => {
         <div className='form-content'>
           <fieldset>
             <legend>
-              <span className='number'>1</span> {sesion.title}
-            </legend>
-            <label>Elige una sesion acordes a tus necesidades:</label>
-            <div className='space'>
-              <input
-                type='radio'
-                id='sesion1'
-                value={JSON.stringify(sesion.sesion1)}
-                name='sesion'
-              />
-              <label htmlFor='sesion1' className='light'>
-                {sesion.sesion1?.description}
-              </label>
-            </div>
-            <div className='space'>
-              <input
-                type='radio'
-                id='sesion2'
-                value={JSON.stringify(sesion.sesion2)}
-                name='sesion'
-              />
-              <label htmlFor='sesion2' className='light'>
-                {sesion.sesion2?.description}
-              </label>
-            </div>
-          </fieldset>
-          <fieldset>
-            <legend>
-              <span className='number'>2</span> Información para realizar pago
+              <span className='number'>1</span> Información para realizar pago
             </legend>
             <div className='space'>
               <span>Nombre:</span>
@@ -76,14 +49,39 @@ const selectMembership = () => {
               <span>Número de cuenta:</span>
               <span>381053465609</span>
             </div>
+            <hr />
+            <h2>
+              {check.title === 'PLAN EMPRESARIAL'
+                ? 'Facturado anualmente'
+                : 'Facturado por sesiones'}
+            </h2>
             <div className='space'>
-              <span>Cantidad a pagar:</span>
-              <span>{currencyFormatter('USD', sesion.sesion1?.price!)} </span>
+              <span>Plan:</span>
+              <span>{check.title}</span>
             </div>
+            <div className='space'>
+              <span>
+                {check.priceU
+                  ? 'Cantidad a pagar por mes: '
+                  : 'Cantidad a pagar por Sesión: '}
+              </span>
+              <span>
+                {currencyFormatter(
+                  'USD',
+                  check.priceU ? check.priceU : check.priceS
+                )}
+              </span>
+            </div>
+            {check.desc1 && (
+              <div className='space'>
+                <span>Paquete Incluye: </span>
+                <span>{`${check.desc1}, ${check.desc2}, ${check.desc3}`}</span>
+              </div>
+            )}
           </fieldset>
           <fieldset>
             <legend>
-              <span className='number'>3</span> Persona Que Hizo El Pago
+              <span className='number'>2</span> Persona que realizo el pago
             </legend>
 
             <label htmlFor='name'>Nombre:</label>
