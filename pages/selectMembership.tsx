@@ -1,8 +1,10 @@
-import { useContext } from 'react';
-import { Container } from '@mui/material';
+import { ChangeEvent, useContext, useRef } from 'react';
+import { Container, Button, Chip } from '@mui/material';
+import { UploadOutlined } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { MembershipContext } from '../context/membership';
-import { currencyFormatter } from '../helpers';
+import { currencyFormatter, isEmpty } from '../helpers';
+import { mbepApi } from '../api';
 
 type FormData = {
   name: string;
@@ -10,19 +12,51 @@ type FormData = {
   email: string;
   datetime: string;
   adicional: string;
+  images: string[];
 };
 
 const selectMembership = () => {
   const { check } = useContext(MembershipContext);
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    setValue,
   } = useForm<FormData>();
 
   const handlebuy = (data) => {
     console.log(data);
+  };
+
+  const onFilesSelected = async ({
+    target: { files },
+  }: ChangeEvent<HTMLInputElement>) => {
+    /* Checking if the target.files is empty or not. */
+    if (!files || isEmpty(files)) return;
+
+    try {
+      for (var i = 0; i < files.length; i++) {
+        /* Creating a new FormData object and appending the file to it. */
+        const formData = new FormData();
+        formData.append('file', files[i]);
+
+        /* Sending the file to the server. */
+        const { data } = await mbepApi.post<{ message: string }>(
+          '/admin/upload',
+          formData
+        );
+        
+        /* Adding the image to the images array. */
+        // ! corregir el error que arroja
+        setValue('images', [...getValues('images'), data.message], {
+          shouldValidate: true,
+        });
+      }
+    } catch (error) {
+      console.log({ error });
+    }
   };
 
   return (
@@ -91,6 +125,37 @@ const selectMembership = () => {
               })}
               type='text'
             />
+
+            {/* -------------------------------- */}
+
+            {/* A button that when clicked, it opens a file explorer to select a file. */}
+            <label htmlFor='name'>Agrega la imagen del recibo:</label>
+            <Button
+              color='secondary'
+              fullWidth
+              startIcon={<UploadOutlined />}
+              sx={{ mb: 3 }}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Cargar imagen
+            </Button>
+            <input
+              ref={fileInputRef}
+              type='file'
+              multiple
+              accept='image/png, image/gif, image/jpeg'
+              style={{ display: 'none' }}
+              onChange={onFilesSelected}
+            />
+
+            <Chip
+              label='Es necesario al 1 imagen'
+              color='error'
+              variant='outlined'
+              sx={{ display: getValues('images') ? 'flex' : 'none' }}
+            />
+            {/* -------------------------------- */}
+
             <label htmlFor='reference'>Referencia:</label>
             <input
               {...register('reference', {
