@@ -10,6 +10,28 @@ form {
     margin: 0 0 30px 0;
     text-align: center;
   }
+  .imageFile {
+    -moz-column-gap: 25px;
+    column-gap: 25px;
+    display: flex;
+    row-gap: 10px;
+    flex-wrap: wrap;
+
+    span {
+      cursor: pointer;
+      height: 18px;
+      left: 20px;
+      position: absolute;
+      text-align: center;
+      top: 2px;
+      width: 18px;
+      svg {
+        position: absolute;
+        background-color: $primary-ligth;
+        border-radius: 50px;
+      }
+    }
+  }
 }
 
 .space {
