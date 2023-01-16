@@ -1,6 +1,7 @@
-import { ChangeEvent, useContext, useRef } from 'react';
+import { ChangeEvent, useContext, useRef, useState } from 'react';
 import { Container, Button, Chip } from '@mui/material';
 import { UploadOutlined } from '@mui/icons-material';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useForm } from 'react-hook-form';
 import { MembershipContext } from '../context/membership';
 import { currencyFormatter, isEmpty } from '../helpers';
@@ -18,16 +19,36 @@ type FormData = {
 const selectMembership = () => {
   const { check } = useContext(MembershipContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isImage, setIsImage] = useState('none');
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
     getValues,
     setValue,
   } = useForm<FormData>();
 
-  const handlebuy = (data) => {
-    console.log(data);
+  const handleVerify = () => {
+    /* Checking if the images array is empty or not. If it is empty, it will display the error message. */
+    if (getValues('images') === undefined) return setIsImage('flex');
+  };
+
+  const onSubmit = async (form: FormData) => {
+    setIsSaving(true);
+    setIsImage('none');
+    try {
+      await mbepApi({
+        url: '/admin/membership',
+        method: 'POST',
+        data: form,
+      });
+    } catch (error) {
+      console.log(error);
+      setIsSaving(false);
+    }
+    reset();
   };
 
   const onFilesSelected = async ({
@@ -47,21 +68,40 @@ const selectMembership = () => {
           '/admin/upload',
           formData
         );
-        
+
         /* Adding the image to the images array. */
-        // ! corregir el error que arroja
-        setValue('images', [...getValues('images'), data.message], {
-          shouldValidate: true,
-        });
+        if (getValues('images') !== undefined) {
+          setValue('images', [...getValues('images'), data.message], {
+            shouldValidate: true,
+          });
+        } else {
+          setValue('images', [data.message], {
+            shouldValidate: true,
+          });
+        }
       }
+      setIsImage('none');
     } catch (error) {
       console.log({ error });
     }
   };
 
+  /**
+   * The function onDeleteImage takes an image as a parameter and sets the value of the images field to
+   * the current value of the images field minus the image that was passed in as a parameter.
+   * @param {string} image - string - the image to be deleted
+   */
+  const onDeleteImage = (image: string) => {
+    setValue(
+      'images',
+      getValues('images').filter((img) => img !== image),
+      { shouldValidate: true }
+    );
+  };
+
   return (
     <Container>
-      <form onSubmit={handleSubmit(handlebuy)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className='form-content'>
           <fieldset>
             <legend>
@@ -125,7 +165,14 @@ const selectMembership = () => {
               })}
               type='text'
             />
-
+            <Chip
+              label={errors.name?.message}
+              color='error'
+              variant='outlined'
+              sx={{
+                display: errors.name?.message ? 'flex' : 'none',
+              }}
+            />
             {/* -------------------------------- */}
 
             {/* A button that when clicked, it opens a file explorer to select a file. */}
@@ -148,11 +195,24 @@ const selectMembership = () => {
               onChange={onFilesSelected}
             />
 
+            <div className='imageFile'>
+              {getValues('images')?.map((item) => (
+                <div style={{ position: 'relative' }} key={item}>
+                  <span onClick={() => onDeleteImage(item)}>
+                    <HighlightOffIcon />
+                  </span>
+                  <img src={`${item}`} width='40px' height={'40px'} alt='img' />
+                </div>
+              ))}
+            </div>
+
             <Chip
-              label='Es necesario al 1 imagen'
+              label={'Coloca la imagen del recibo de pago'}
               color='error'
               variant='outlined'
-              sx={{ display: getValues('images') ? 'flex' : 'none' }}
+              sx={{
+                display: isImage,
+              }}
             />
             {/* -------------------------------- */}
 
@@ -163,12 +223,28 @@ const selectMembership = () => {
               })}
               type='text'
             />
+            <Chip
+              label={errors.reference?.message}
+              color='error'
+              variant='outlined'
+              sx={{
+                display: errors.reference?.message ? 'flex' : 'none',
+              }}
+            />
             <label htmlFor='email'>Correo:</label>
             <input
               {...register('email', {
                 required: 'Email es requerido',
               })}
               type='email'
+            />
+            <Chip
+              label={errors.email?.message}
+              color='error'
+              variant='outlined'
+              sx={{
+                display: errors.email?.message ? 'flex' : 'none',
+              }}
             />
             <label htmlFor='datetime'>Fecha De Pago:</label>
             <input
@@ -177,6 +253,14 @@ const selectMembership = () => {
               })}
               type='datetime-local'
             />
+            <Chip
+              label={errors.datetime?.message}
+              color='error'
+              variant='outlined'
+              sx={{
+                display: errors.datetime?.message ? 'flex' : 'none',
+              }}
+            />
             <label htmlFor='adicional'>Información Adicional:</label>
             <textarea
               {...register('adicional', {
@@ -184,7 +268,17 @@ const selectMembership = () => {
                 minLength: { value: 3, message: 'Minimo 3 caracteres' },
               })}
             ></textarea>
-            <button type='submit'>Enviar</button>
+            <Chip
+              label={errors.adicional?.message}
+              color='error'
+              variant='outlined'
+              sx={{
+                display: errors.adicional?.message ? 'flex' : 'none',
+              }}
+            />
+            <button onClick={handleVerify} type='submit' disabled={isSaving}>
+              Enviar
+            </button>
           </fieldset>
         </div>
       </form>
