@@ -135,16 +135,11 @@ const selectMembership = () => {
             </div>
             <div className='space'>
               <span>
-                {check.priceU
+                {check.repro
                   ? 'Cantidad a pagar por mes: '
                   : 'Cantidad a pagar por Sesión: '}
               </span>
-              <span>
-                {currencyFormatter(
-                  'USD',
-                  check.priceU ? check.priceU : check.priceS
-                )}
-              </span>
+              <span>{currencyFormatter('USD', check.priceU)}</span>
             </div>
             {check.desc1 && (
               <div className='space'>
