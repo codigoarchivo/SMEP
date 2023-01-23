@@ -16,6 +16,5 @@ export interface ICheck {
     price?: string,
     monthT?: number,
     priceU?: number,
-    priceS?: number,
 }
 
