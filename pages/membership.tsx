@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Paper, Button, Container } from '@mui/material';
 import { member } from '../database';
 import { IMembership } from '../interfaces';
-import { calcAge } from '../helpers';
+import { calcAge, returnNumber } from '../helpers';
 import { MembershipContext } from '../context/membership';
 
 const membership: NextPage = () => {
@@ -21,13 +21,13 @@ const membership: NextPage = () => {
       toggle
         ? {
             ...data,
-            monthT: calcAge(Number(data.price!.slice(10, 11).trim())),
-            priceU: Number(data.price!.slice(0, 2).trim()),
-            repro: Number(data.price!.slice(0, 1).trim()),
+            monthT: calcAge(1),
+            priceU: returnNumber(data.price?.slice(0, 8)),
+            repro: returnNumber(data.desc3),
           }
         : {
             title: data.title,
-            priceS: Number(data.price?.slice(0, 3).trim()),
+            priceU: returnNumber(data.price),
           }
     );
 
