@@ -1,15 +1,17 @@
-import { FC, useReducer, ReactNode, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { AuthContext, authReducer } from "./";
-import { IUser } from "../../interfaces";
-import { mbepApi } from "../../api";
+import { FC, useReducer, ReactNode, useEffect } from 'react';
+import { signOut, useSession } from 'next-auth/react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { AuthContext, authReducer } from './';
+import { IUser } from '../../interfaces';
+import { mbepApi } from '../../api';
 
 export interface AuthState {
   isLoggeIn: boolean;
   user?: IUser;
 }
+
+export type hm = { hasError: boolean; message?: string };
 
 interface Props {
   children: ReactNode;
@@ -20,39 +22,35 @@ const AUTH_INITIAL_STATE: AuthState = {
   user: undefined,
 };
 
-type registerProps = { hasError: boolean; message?: string };
-
 export const AuthProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 
-  /* TODO falta la configuracion api*/
+  /* A hook that is provided by the next-auth package. It is used to check if the user is logged in. */
   const { data, status } = useSession();
   useEffect(() => {
-    if (status === "authenticated") {
-      dispatch({ type: "[Auth] - Login", payload: data?.user as IUser });
-    }
+    if (status === 'authenticated')
+      dispatch({ type: '[Auth] - Login', payload: data?.user as IUser });
   }, [data, status]);
 
+  /* A method that is used to register a user. */
   const registerUser = async (
     name: string,
     email: string,
     password: string
-  ): Promise<registerProps> => {
+  ): Promise<hm> => {
     try {
       /* Destructuring the data property from the response object. */
-      const { data } = await mbepApi.post("/user/register", {
+      const { data } = await mbepApi.post('/user/register', {
         name,
         email,
         password,
       });
 
-      const { token, user } = data;
-
-      /* Setting a cookie with the name "token" and the value of the token. */
-      Cookies.set("token", token);
+      /* Setting a cookie with the name 'token' and the value of the token. */
+      Cookies.set('token', data.token);
 
       /* Dispatching an action to the authReducer. */
-      dispatch({ type: "[Auth] - Login", payload: user });
+      dispatch({ type: '[Auth] - Login', payload: data.user });
 
       return { hasError: false };
     } catch (error) {
@@ -69,9 +67,13 @@ export const AuthProvider: FC<Props> = ({ children }) => {
       error message. */
       return {
         hasError: true,
-        message: "No se pudo crear el usuario - intente de nuevo",
+        message: 'Failed to create user - try again',
       };
     }
+  };
+
+  const logout = () => {
+    signOut();
   };
 
   return (
@@ -81,6 +83,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
         // method
         registerUser,
+        logout,
       }}
     >
       {children}
