@@ -17,7 +17,7 @@ type FormData = {
 };
 
 const selectMembership = () => {
-  const { check } = useContext(MembershipContext);
+  const { check, sessionOrSubscription } = useContext(MembershipContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isImage, setIsImage] = useState('none');
@@ -35,15 +35,33 @@ const selectMembership = () => {
     if (getValues('images') === undefined) return setIsImage('flex');
   };
 
-  const onSubmit = async (form: FormData) => {
+  const onSubmit = (form: FormData) => {
     setIsSaving(true);
     setIsImage('none');
+
+    handleVerify();
+
     try {
-      await mbepApi({
-        url: '/admin/membership',
-        method: 'POST',
-        data: form,
-      });
+      /* A function that is being called. */
+
+      check.repro
+        ? sessionOrSubscription({
+            ...form,
+            monthT: check.monthT || 0,
+            priceU: check.priceU || 0,
+            repro: check.repro || 0,
+            title: check.title || '',
+            desc:
+              `${check.desc1}, ${check.desc2}, ${check.desc3} con un valor de ${check.price}` ||
+              '',
+            valid: false,
+          })
+        : sessionOrSubscription({
+            ...form,
+            priceU: check.priceU || 0,
+            title: check.title || '',
+            valid: false,
+          });
     } catch (error) {
       console.log(error);
       setIsSaving(false);
@@ -92,6 +110,8 @@ const selectMembership = () => {
    * @param {string} image - string - the image to be deleted
    */
   const onDeleteImage = (image: string) => {
+    setIsImage('flex');
+    setIsSaving(false);
     setValue(
       'images',
       getValues('images').filter((img) => img !== image),
@@ -173,10 +193,9 @@ const selectMembership = () => {
             {/* A button that when clicked, it opens a file explorer to select a file. */}
             <label htmlFor='name'>Agrega la imagen del recibo:</label>
             <Button
-              color='secondary'
+              color='primary'
               fullWidth
               startIcon={<UploadOutlined />}
-              sx={{ mb: 3 }}
               onClick={() => fileInputRef.current?.click()}
             >
               Cargar imagen
@@ -258,6 +277,7 @@ const selectMembership = () => {
             />
             <label htmlFor='adicional'>Información Adicional:</label>
             <textarea
+              style={{ marginBottom: '5px' }}
               {...register('adicional', {
                 required: 'Adicional es requerido',
                 minLength: { value: 3, message: 'Minimo 3 caracteres' },
@@ -271,9 +291,15 @@ const selectMembership = () => {
                 display: errors.adicional?.message ? 'flex' : 'none',
               }}
             />
-            <button onClick={handleVerify} type='submit' disabled={isSaving}>
+            <Button
+              className='btn-send'
+              color='primary'
+              onClick={handleVerify}
+              type='submit'
+              disabled={isSaving}
+            >
               Enviar
-            </button>
+            </Button>
           </fieldset>
         </div>
       </form>
