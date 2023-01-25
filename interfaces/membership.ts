@@ -18,3 +18,17 @@ export interface ICheck {
     priceU?: number,
 }
 
+export interface ISessionOrSubscription {
+    adicional: string;
+    datetime: string;
+    email: string;
+    images: string[];
+    monthT?: number;
+    name: string;
+    desc?: string;
+    priceU: number;
+    reference: string;
+    repro?: number;
+    title: string;
+    valid: boolean,
+}
