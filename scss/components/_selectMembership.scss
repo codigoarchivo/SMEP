@@ -42,31 +42,14 @@ form {
   label {
     font-size: 1.2rem;
   }
-  input {
-    cursor: pointer;
-    height: 1.3rem;
-    transition: 0.2s all linear;
-    width: 1.3rem;
-  }
-  input,
   span:nth-child(1) {
     margin-left: 1rem;
     font-weight: bold;
   }
 }
 
-button {
-  background-color: $primary-dark-b;
-  border-radius: 5px;
-  border-width: 1px 1px 3px;
-  border: 1px solid $primary-dark-b;
-  color: $primary-ligth;
-  cursor: pointer;
-  font-size: 18px;
-  font-style: normal;
-  margin-bottom: 10px;
-  padding: 19px 39px 18px 39px;
-  text-align: center;
+.btn-send {
+  padding: 19px 39px 18px 39px !important;
   width: 100%;
 }
 
@@ -75,7 +58,7 @@ fieldset {
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
-  row-gap: 25px;
+  row-gap: 20px;
   padding: 0.5rem;
   width: 40%;
   legend {
