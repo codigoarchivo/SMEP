@@ -53,14 +53,12 @@ const selectMembership = () => {
             title: check.title || '',
             desc:
               `${check.desc1}, ${check.desc2}, ${check.desc3} con un valor de ${check.price}` ||
-              '',
-            valid: false,
+              ''
           })
         : sessionOrSubscription({
             ...form,
             priceU: check.priceU || 0,
             title: check.title || '',
-            valid: false,
           });
     } catch (error) {
       console.log(error);
