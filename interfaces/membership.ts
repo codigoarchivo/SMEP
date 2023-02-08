@@ -29,6 +29,5 @@ export interface ISessionOrSubscription {
     priceU: number;
     reference: string;
     repro?: number;
-    title: string;
-    valid: boolean,
+    title: string
 }
