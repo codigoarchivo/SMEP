@@ -1,11 +1,14 @@
-import { ChangeEvent, useContext, useRef, useState } from 'react';
+import { ChangeEvent, useContext, useRef, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Container, Button, Chip } from '@mui/material';
 import { UploadOutlined } from '@mui/icons-material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useForm } from 'react-hook-form';
+import Cookie from 'js-cookie';
 import { MembershipContext } from '../../context/membership';
 import { currencyFormatter, isEmpty } from '../../helpers';
 import { mbepApi } from '../../api';
+import { ICheck } from '../../interfaces';
 
 type FormData = {
   name: string;
@@ -17,10 +20,12 @@ type FormData = {
 };
 
 const selectMembership = () => {
-  const { check, sessionOrSubscription } = useContext(MembershipContext);
+  const router = useRouter();
+  const { check, subscription } = useContext(MembershipContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isImage, setIsImage] = useState('none');
+  const [isText, setIsText] = useState<ICheck>({});
   const {
     register,
     handleSubmit,
@@ -30,40 +35,44 @@ const selectMembership = () => {
     setValue,
   } = useForm<FormData>();
 
-  const handleVerify = () => {
-    /* Checking if the images array is empty or not. If it is empty, it will display the error message. */
-    if (getValues('images') === undefined) return setIsImage('flex');
-  };
+  useEffect(() => {
+    setIsText(check);
+  }, [check]);
+
+  const { repro, monthT, priceU, title, desc1, desc2, desc3, price } = isText;
+  
 
   const onSubmit = (form: FormData) => {
-    setIsSaving(true);
+    setIsSaving(false);
     setIsImage('none');
 
-    handleVerify();
-
+    if (isEmpty(check)) return router.replace('/membership');
+    if (getValues('images') === undefined || !getValues('images')[0])
+      return setIsImage('flex');
     try {
       /* A function that is being called. */
-
-      check.repro
-        ? sessionOrSubscription({
+      repro
+        ? subscription({
             ...form,
-            monthT: check.monthT || 0,
-            priceU: check.priceU || 0,
-            repro: check.repro || 0,
-            title: check.title || '',
+            monthT: monthT ?? 0,
+            priceU: priceU ?? 0,
+            repro: repro ?? 0,
+            title: title ?? '',
             desc:
-              `${check.desc1}, ${check.desc2}, ${check.desc3} con un valor de ${check.price}` ||
-              ''
+              `${desc1}, ${desc2}, ${desc3}, con un valor de ${price}` || '',
           })
-        : sessionOrSubscription({
-            ...form,
-            priceU: check.priceU || 0,
-            title: check.title || '',
-          });
+        : '';
+      // : subscription({
+      //     ...form,
+      //     priceU: priceU ?? 0,
+      //     title: title ?? '',
+      //   });
     } catch (error) {
       console.log(error);
-      setIsSaving(false);
+      setIsSaving(true);
     }
+    Cookie.remove('check');
+    setIsText({});
     reset();
   };
 
@@ -96,8 +105,11 @@ const selectMembership = () => {
           });
         }
       }
+      setIsSaving(false);
       setIsImage('none');
     } catch (error) {
+      setIsSaving(true);
+      setIsImage('flex');
       console.log({ error });
     }
   };
@@ -108,8 +120,10 @@ const selectMembership = () => {
    * @param {string} image - string - the image to be deleted
    */
   const onDeleteImage = (image: string) => {
-    setIsImage('flex');
-    setIsSaving(false);
+    if (getValues('images').length === 1) {
+      setIsImage('flex');
+      setIsSaving(true);
+    }
     setValue(
       'images',
       getValues('images').filter((img) => img !== image),
@@ -143,26 +157,31 @@ const selectMembership = () => {
             </div>
             <hr />
             <h2>
-              {check.title === 'PLAN EMPRESARIAL'
-                ? 'Facturado anualmente'
-                : 'Facturado por sesiones'}
+              {title === 'PLAN EMPRESARIAL' && 'Facturado anualmente'}
+              {title && 'Facturado por sesiones'}
             </h2>
-            <div className='space'>
-              <span>Plan:</span>
-              <span>{check.title}</span>
-            </div>
-            <div className='space'>
-              <span>
-                {check.repro
-                  ? 'Cantidad a pagar por mes: '
-                  : 'Cantidad a pagar por Sesión: '}
-              </span>
-              <span>{currencyFormatter('USD', check.priceU)}</span>
-            </div>
-            {check.desc1 && (
+
+            {title && (
+              <div className='space'>
+                <span>Plan:</span>
+                <span>{title}</span>
+              </div>
+            )}
+            {priceU && (
+              <div className='space'>
+                <span>
+                  {repro
+                    ? 'Cantidad a pagar por mes: '
+                    : 'Cantidad a pagar por Sesión: '}
+                </span>
+                <span>{currencyFormatter('USD', priceU)}</span>
+              </div>
+            )}
+
+            {desc1 && (
               <div className='space'>
                 <span>Paquete Incluye: </span>
-                <span>{`${check.desc1}, ${check.desc2}, ${check.desc3}`}</span>
+                <span>{`${desc1}, ${desc2}, ${desc3}`}</span>
               </div>
             )}
           </fieldset>
@@ -200,6 +219,7 @@ const selectMembership = () => {
             </Button>
             <input
               ref={fileInputRef}
+              key={(getValues('images') as any) || ''}
               type='file'
               multiple
               accept='image/png, image/gif, image/jpeg'
@@ -292,7 +312,6 @@ const selectMembership = () => {
             <Button
               className='btn-send'
               color='primary'
-              onClick={handleVerify}
               type='submit'
               disabled={isSaving}
             >
