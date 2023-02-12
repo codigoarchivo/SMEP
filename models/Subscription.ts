@@ -2,6 +2,7 @@ import mongoose, { Schema, model, Model } from "mongoose";
 import { IMembership } from '../interfaces';
 
 const subscriptionSchema = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'User', require: true },
     adicional: { type: String, require: true },
     datetime: { type: String, require: true },
     email: { type: String, require: true },
@@ -10,7 +11,8 @@ const subscriptionSchema = new Schema({
     priceU: { type: Number, require: true },
     repro: { type: Number, require: true },
     title: { type: String, require: true },
-    desc: { type: String, require: true }
+    desc: { type: String, require: true },
+    valid: { type: Boolean, require: true }
 },
     {
         timestamps: true,
