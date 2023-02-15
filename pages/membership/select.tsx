@@ -5,10 +5,11 @@ import { UploadOutlined } from '@mui/icons-material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useForm } from 'react-hook-form';
 import Cookie from 'js-cookie';
-import { MembershipContext } from '../../context/membership';
-import { currencyFormatter, isEmpty } from '../../helpers';
 import { mbepApi } from '../../api';
 import { ICheck } from '../../interfaces';
+import { currencyFormatter, isEmpty } from '../../helpers';
+import { AlertButton } from '../../components/utils/alert';
+import { MembershipContext } from '../../context/membership';
 
 type FormData = {
   name: string;
@@ -21,11 +22,12 @@ type FormData = {
 
 const selectMembership = () => {
   const router = useRouter();
-  const { check, subscription } = useContext(MembershipContext);
+  const { check, subscription, session } = useContext(MembershipContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isImage, setIsImage] = useState('none');
   const [isText, setIsText] = useState<ICheck>({});
+  const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -40,7 +42,6 @@ const selectMembership = () => {
   }, [check]);
 
   const { repro, monthT, priceU, title, desc1, desc2, desc3, price } = isText;
-  
 
   const onSubmit = (form: FormData) => {
     setIsSaving(false);
@@ -61,12 +62,11 @@ const selectMembership = () => {
             desc:
               `${desc1}, ${desc2}, ${desc3}, con un valor de ${price}` || '',
           })
-        : '';
-      // : subscription({
-      //     ...form,
-      //     priceU: priceU ?? 0,
-      //     title: title ?? '',
-      //   });
+        : session({
+            ...form,
+            priceU: priceU ?? 0,
+            title: title ?? '',
+          });
     } catch (error) {
       console.log(error);
       setIsSaving(true);
@@ -131,6 +131,17 @@ const selectMembership = () => {
     );
   };
 
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+  
   return (
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -188,6 +199,13 @@ const selectMembership = () => {
           <fieldset>
             <legend>
               <span className='number'>2</span> Persona que realizo el pago
+              <Button
+                size='small'
+                color='primary'
+                onClick={() => router.push('/membership/list')}
+              >
+                Tus membresias
+              </Button>
             </legend>
 
             <label htmlFor='name'>Nombre:</label>
@@ -314,9 +332,15 @@ const selectMembership = () => {
               color='primary'
               type='submit'
               disabled={isSaving}
+              onClick={() => setOpen(true)}
             >
               Enviar
             </Button>
+            <AlertButton
+              onClose={handleClose}
+              open={open}
+              severity={'success'}
+            />
           </fieldset>
         </div>
       </form>
