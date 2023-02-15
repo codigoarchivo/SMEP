@@ -1,13 +1,15 @@
 import { createContext } from "react";
-import { ICheck, ISubscription } from "../../interfaces";
+import { ICheck, ISessionOrSubscription } from "../../interfaces";
 
 interface ContextProps {
   check: ICheck;
-  sub: ISubscription[];
+  sub: ISessionOrSubscription[];
+  ses: ISessionOrSubscription[];
 
   // method
   selectedCheck: (business: ICheck) => void;
-  subscription: (data: ISubscription) => void
+  subscription: (data: ISessionOrSubscription) => void
+  session: (data: ISessionOrSubscription) => void
 }
 
 export const MembershipContext = createContext({} as ContextProps);
