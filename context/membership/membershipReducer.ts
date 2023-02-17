@@ -1,10 +1,10 @@
 import { MembershipState } from './';
-import { ICheck, ISessionOrSubscription } from '../../interfaces';
+import { ICheck, ISession, ISubscription } from '../../interfaces';
 
 type MembershipActionType =
     | { type: '[Check] - all', payload: ICheck }
-    | { type: '[Sub] - Subscription', payload: ISessionOrSubscription[] }
-    | { type: '[Ses] - Session', payload: ISessionOrSubscription[] }
+    | { type: '[Sub] - Subscription', payload: ISubscription[] }
+    | { type: '[Ses] - Session', payload: ISession[] }
 
 export const membershipReducer = (state: MembershipState, action: MembershipActionType): MembershipState => {
     switch (action.type) {
