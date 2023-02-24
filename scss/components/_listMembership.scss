@@ -1,0 +1,35 @@
+.modal__textImg {
+  display: grid;
+  place-content: center;
+  height: calc(100vh - 50px);
+  &-content {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  &-button {
+    background-color: transparent;
+      position: absolute;
+      right: 0;
+      top: 0;
+      padding: 10px;
+  }
+}
+
+.image__box,
+.text__box {
+  padding: 35px;
+  width: 500px;
+  height: auto;
+}
+.image__box {
+  display: grid;
+  row-gap: 20px;
+}
+.text__box {
+  word-wrap: break-word;
+  font-size: 1.2rem;
+  button {
+    margin-left: 1rem;
+  }
+}
