@@ -7,9 +7,13 @@ interface ContextProps {
   ses: ISession[];
 
   // method
+  listSession: (data: ISession[]) => void;
+  listSubscription: (data: ISubscription[]) => void;
   selectedCheck: (business: ICheck) => void;
-  subscription: (data: ISubscription) => void
-  session: (data: ISession) => void
+  subscription: (data: ISubscription) => void;
+  session: (data: ISession) => void;
+  deleteOne: (id: string) => void;
+  deleteTwo: (id: string) => void;
 }
 
 export const MembershipContext = createContext({} as ContextProps);
