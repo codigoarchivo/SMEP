@@ -20,6 +20,7 @@ export const connect = async () => {
         await mongoose.disconnect();
     }
     /* Connecting to the MongoDB database. */
+    mongoose.set("strictQuery", false);
     await mongoose.connect(process.env.MONGO_URL || '');
     /* Setting the value of `isConnected` to 1. */
     mongoConnection.isConnected = 1;
