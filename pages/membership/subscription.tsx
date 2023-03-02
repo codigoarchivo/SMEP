@@ -1,12 +1,12 @@
-import { useContext, useEffect } from "react";
-import { GetServerSideProps, NextPage } from "next";
-import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
-import Container from "@mui/material/Container";
-import { dbSubscription } from "../../database";
-import { ISubscription, IUserLem } from "../../interfaces";
-import { CardScreen } from "../../components/membership";
-import { MembershipContext } from "../../context/membership";
+import { useContext, useEffect } from 'react';
+import { GetServerSideProps, NextPage } from 'next';
+import { Session } from 'next-auth';
+import { getSession } from 'next-auth/react';
+import Container from '@mui/material/Container';
+import { dbSubscription } from '../../database';
+import { ISubscription, IUserLem } from '../../interfaces';
+import { CardScreen } from '../../components/membership';
+import { MembershipContext } from '../../context/membership';
 
 interface PropsSession {
   subscription: ISubscription[];
@@ -21,7 +21,7 @@ const ListSubscription: NextPage<PropsSession> = ({ subscription }) => {
 
   return (
     <Container>
-      <div className="membership__list">
+      <div className='membership__list'>
         <CardScreen />
       </div>
     </Container>
@@ -34,7 +34,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/auth/login?p=/membership/list",
+        destination: '/auth/login?p=/membership/list',
         permanent: false,
       },
     };
