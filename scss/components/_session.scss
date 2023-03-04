@@ -15,36 +15,3 @@
     text-transform: uppercase;
   }
 }
-.membership__list {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  &-card {
-    display: flex;
-    justify-content: space-between;
-    box-shadow: $primary-shadow;
-    width: 49.5%;
-    border-radius: 5px;
-  }
-  &-cont ul,
-  &-action {
-    padding: 20px;
-    display: grid;
-    row-gap: 5px;
-    font-size: 1rem;
-    align-content: end;
-  }
-  &-action li button {
-    width: -webkit-fill-available;
-  }
-  &-cont ul li {
-    display: flex;
-    column-gap: 5px;
-  }
-  &-cont ul li span:nth-child(1) {
-    font-weight: 800;
-  }
-  &-cont ul li span:nth-child(2) {
-    word-break: break-all;
-  }
-}
