@@ -1,3 +1,38 @@
+.membership__list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  &-card {
+    display: flex;
+    justify-content: space-between;
+    box-shadow: $primary-shadow;
+    width: 49.5%;
+    min-width: 458px;
+    border-radius: 5px;
+  }
+  &-cont ul,
+  &-action {
+    padding: 20px;
+    display: grid;
+    row-gap: 5px;
+    font-size: 1rem;
+    align-content: end;
+  }
+  &-action li button {
+    width: -webkit-fill-available;
+  }
+  &-cont ul li {
+    display: flex;
+    column-gap: 5px;
+  }
+  &-cont ul li span:nth-child(1) {
+    font-weight: 800;
+  }
+  &-cont ul li span:nth-child(2) {
+    word-break: break-all;
+  }
+}
+
 .modal__textImg {
   display: grid;
   place-content: center;
@@ -9,10 +44,24 @@
 
   &-button {
     background-color: transparent;
-      position: absolute;
-      right: 0;
-      top: 0;
-      padding: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 10px;
+  }
+
+  &-renewal {
+    padding: 20px;
+    position: relative;
+    overflow-y: auto;
+    form {
+      display: grid;
+      row-gap: 2px;
+      margin: 10px auto;
+    }
+  }
+  &-imgBtn {
+    width: inherit;
   }
 }
 
