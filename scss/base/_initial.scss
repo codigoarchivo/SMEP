@@ -7,6 +7,9 @@
 body {
   font-family: "Roboto", sans-serif;
 }
+li {
+  list-style: none;
+}
 .box-shadow {
   border-radius: 10px;
   box-shadow: $primary-shadow;
