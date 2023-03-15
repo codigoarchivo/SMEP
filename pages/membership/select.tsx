@@ -1,4 +1,5 @@
 import { ChangeEvent, useContext, useRef, useState, useEffect } from 'react';
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Container, Button, Chip } from '@mui/material';
 import { UploadOutlined } from '@mui/icons-material';
@@ -6,10 +7,10 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useForm } from 'react-hook-form';
 import Cookie from 'js-cookie';
 import { mbepApi } from '../../api';
-import { ICheck } from '../../interfaces';
 import { currencyFormatter, isEmpty } from '../../helpers';
 import { AlertButton } from '../../components/utils/alert';
 import { MembershipContext } from '../../context/membership';
+import { ISelectSession, ISelectSubscription } from '../../interfaces';
 
 type FormData = {
   name: string;
@@ -20,13 +21,13 @@ type FormData = {
   images: string[];
 };
 
-const selectMembership = () => {
+const SelectMembership: NextPage = () => {
   const router = useRouter();
   const { check, subscription, session } = useContext(MembershipContext);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isImage, setIsImage] = useState('none');
-  const [isText, setIsText] = useState<ICheck>({});
+  const [isText, setIsText] = useState<ISelectSubscription | ISelectSession>();
   const [open, setOpen] = useState(false);
   const {
     register,
@@ -41,15 +42,16 @@ const selectMembership = () => {
     setIsText(check);
   }, [check]);
 
-  const { repro, monthT, priceU, title, desc1, desc2, desc3, price } = isText;
+  const { repro, monthT, priceU, title, desc1, desc2, desc3, price } = isText as any;
 
   const onSubmit = (form: FormData) => {
     setIsSaving(false);
     setIsImage('none');
 
-    if (isEmpty(check)) return router.replace('/membership');
+    if (isEmpty(check)) return router.replace('/membership'), setOpen(false);
     if (getValues('images') === undefined || !getValues('images')[0])
-      return setIsImage('flex');
+      return setIsImage('flex'), setOpen(false);
+
     try {
       /* A function that is being called. */
       repro
@@ -67,12 +69,16 @@ const selectMembership = () => {
             priceU: priceU ?? 0,
             title: title ?? '',
           });
+          
+      setOpen(true);
+      setTimeout(() => setOpen(false), 3000);
     } catch (error) {
       console.log(error);
       setIsSaving(true);
+      setOpen(false);
     }
     Cookie.remove('check');
-    setIsText({});
+    setIsText(undefined);
     reset();
   };
 
@@ -141,7 +147,7 @@ const selectMembership = () => {
 
     setOpen(false);
   };
-  
+
   return (
     <Container>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -332,15 +338,16 @@ const selectMembership = () => {
               color='primary'
               type='submit'
               disabled={isSaving}
-              onClick={() => setOpen(true)}
             >
               Enviar
             </Button>
-            <AlertButton
-              onClose={handleClose}
-              open={open}
-              severity={'success'}
-            />
+            {open && (
+              <AlertButton
+                onClose={handleClose}
+                open={open}
+                severity={'success'}
+              />
+            )}
           </fieldset>
         </div>
       </form>
@@ -348,4 +355,4 @@ const selectMembership = () => {
   );
 };
 
-export default selectMembership;
+export default SelectMembership;
