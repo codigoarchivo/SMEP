@@ -1,8 +1,10 @@
 import mongoose, { Schema, model, Model } from "mongoose";
-import { IMembership } from '../interfaces';
+import { ISubscription } from '../interfaces';
 
 const subscriptionSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: 'User', require: true },
+    user: { type: String, require: true },
+    name: { type: String, require: true },
+    reference: { type: String, require: true },
     adicional: { type: String, require: true },
     datetime: { type: String, require: true },
     email: { type: String, require: true },
@@ -12,14 +14,16 @@ const subscriptionSchema = new Schema({
     repro: { type: Number, require: true },
     title: { type: String, require: true },
     desc: { type: String, require: true },
-    valid: { type: Boolean, require: true }
+    select: { type: String, require: true },
+    valid: { type: Boolean, require: true, default: false },
+    state: { type: Boolean, require: true, default: true }
 },
     {
         timestamps: true,
-        versionKey: false,
+        versionKey: false
     }
 )
 
 
-const Subscription: Model<IMembership> = mongoose.models.Subscription || model('Subscription', subscriptionSchema);
+const Subscription: Model<ISubscription> = mongoose.models.Subscription || model('Subscription', subscriptionSchema);
 export default Subscription;
