@@ -1,15 +1,20 @@
 import { FC, useReducer, ReactNode, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { ICheck, ISubscription, IUserLem } from '../../interfaces';
-import { MembershipContext, membershipReducer } from './';
-import { isEmpty } from '../../helpers';
-import { mbepApi } from '../../api';
-import { AuthProvider } from '../auth/AuthProvider';
 import { useSession } from 'next-auth/react';
+import Cookies from 'js-cookie';
+import {
+  ISession,
+  IUserLem,
+  ISubscription,
+  ISelectSession,
+  ISelectSubscription,
+} from '../../interfaces';
+import { MembershipContext, membershipReducer } from './';
+import { mbepApi } from '../../api';
 
 export interface MembershipState {
-  check: ICheck;
+  check: ISelectSubscription | ISelectSession;
   sub: ISubscription[];
+  ses: ISession[];
 }
 
 interface Props {
@@ -17,8 +22,9 @@ interface Props {
 }
 
 const MEMBERSHIP_INITIAL_STATE: MembershipState = {
-  check: {},
+  check: {} as ISelectSubscription | ISelectSession,
   sub: [],
+  ses: [],
 };
 
 export const MembershipProvider: FC<Props> = ({ children }) => {
@@ -33,16 +39,18 @@ export const MembershipProvider: FC<Props> = ({ children }) => {
     try {
       dispatch({ type: '[Check] - all', payload: cookieCheck });
     } catch (error) {
-      dispatch({ type: '[Check] - all', payload: {} as ICheck });
+      dispatch({
+        type: '[Check] - all',
+        payload: {} as ISelectSubscription | ISelectSession,
+      });
     }
   }, []);
 
   useEffect(() => {
-    const sub = Cookies.get('sub') ? JSON.parse(Cookies.get('sub')!) : [];
     try {
       dispatch({
         type: '[Sub] - Subscription',
-        payload: sub,
+        payload: Cookies.get('sub') ? JSON.parse(Cookies.get('sub')!) : [],
       });
     } catch (error) {
       dispatch({
@@ -52,36 +60,136 @@ export const MembershipProvider: FC<Props> = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    try {
+      dispatch({
+        type: '[Ses] - Session',
+        payload: Cookies.get('ses') ? JSON.parse(Cookies.get('ses')!) : [],
+      });
+    } catch (error) {
+      dispatch({
+        type: '[Ses] - Session',
+        payload: [] as ISession[],
+      });
+    }
+  }, []);
+
   const [state, dispatch] = useReducer(
     membershipReducer,
     MEMBERSHIP_INITIAL_STATE
   );
 
-  const selectSave = (name: string, data: ICheck | ISubscription[]) => {
+  const selectSave = (
+    name: string,
+    data: ISelectSubscription | ISelectSession | ISession[] | ISubscription[]
+  ) => {
     Cookies.set(`${name}`, JSON.stringify(data));
   };
 
-  const selectedCheck = (check: ICheck) => {
+  const selectedSession = (check: ISelectSession) => {
     dispatch({ type: '[Check] - all', payload: check });
     selectSave('check', check);
   };
 
+  const selectedSubscription = (check: ISelectSubscription) => {
+    dispatch({ type: '[Check] - all', payload: check });
+    selectSave('check', check);
+  };
+
+  const listSession = (d: ISession[]) => {
+    dispatch({ type: '[Ses] - Session', payload: d });
+    selectSave('ses', d);
+  };
+
+  const listSubscription = (d: ISubscription[]) => {
+    dispatch({ type: '[Sub] - Subscription', payload: d });
+    selectSave('sub', d);
+  };
+
   const subscription = async (dataSub: ISubscription) => {
-    const addBuy = { ...dataSub, user: user._id, valid: false };
+    const addBuy = {
+      ...dataSub,
+      user: user._id,
+    };
+
+    if (!addBuy) return;
 
     const { data, statusText } = await mbepApi.post(
       `/membership/subscription`,
       addBuy
     );
-   
-    if (statusText === 'OK') {
-      await mbepApi.post('/admin/order', {
-        buy: data._id,
-      });
-      const sub = [addBuy, ...state.sub];
-      dispatch({ type: '[Sub] - Subscription', payload: sub });
-      selectSave('sub', sub);
-    }
+
+    if (!statusText) return;
+
+    await mbepApi.post('/admin/order', { sub: data._id, user: user._id });
+
+    const d = [addBuy, ...state.sub];
+    dispatch({ type: '[Sub] - Subscription', payload: d });
+    selectSave('sub', d);
+  };
+
+  const addRenewal = async (dataSub: ISubscription) => {
+    if (user._id !== dataSub.user) return;
+
+    const { data, statusText } = await mbepApi.post(
+      `/membership/subscription`,
+      dataSub
+    );
+
+    if (!statusText) return;
+
+    await mbepApi.post('/admin/order', { sub: data._id, user: user._id });
+
+    const d = [
+      dataSub,
+      ...state.sub.filter((item) => item._id !== dataSub._id),
+    ];
+    dispatch({ type: '[Sub] - Subscription', payload: d });
+    selectSave('sub', d);
+  };
+
+  const session = async (dataSub: ISession) => {
+    const addBuy = {
+      ...dataSub,
+      user: user._id,
+    };
+
+    if (!addBuy) return;
+
+    const { data, statusText } = await mbepApi.post(
+      `/membership/session`,
+      addBuy
+    );
+
+    if (!statusText) return;
+
+    await mbepApi.post('/admin/order', { ses: data._id, user: user._id });
+
+    const d = [addBuy, ...state.ses];
+    dispatch({ type: '[Ses] - Session', payload: d });
+    selectSave('ses', d);
+  };
+
+  const deleteOne = async (id: string) => {
+    const { statusText } = await mbepApi.put(`/membership/session`, { id });
+
+    if (!statusText) return;
+
+    const d = state.ses.filter((item) => item._id !== id);
+    dispatch({ type: '[Ses] - Session', payload: d });
+    selectSave('ses', d);
+  };
+
+  const deleteTwo = async (id: string) => {
+    const { statusText } = await mbepApi.put(`/membership/subscription`, {
+      id,
+    });
+
+    if (!statusText) return;
+
+    const d = state.sub.filter((item) => item._id !== id);
+    dispatch({ type: '[Sub] - Subscription', payload: d });
+    selectSave('sub', d);
   };
 
   return (
@@ -90,8 +198,15 @@ export const MembershipProvider: FC<Props> = ({ children }) => {
         ...state,
 
         //method
-        selectedCheck,
+        selectedSession,
+        selectedSubscription,
+        listSession,
+        listSubscription,
         subscription,
+        session,
+        deleteOne,
+        deleteTwo,
+        addRenewal,
       }}
     >
       {children}
