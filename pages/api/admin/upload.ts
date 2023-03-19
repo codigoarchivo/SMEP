@@ -41,7 +41,7 @@ const parseFiles = async (req: NextApiRequest): Promise<string> => {
 
         /* Parsing the file and saving it to the public folder. */
         form.parse(req, async (err, fields, files) => {
-            console.log({ err, fields, files });
+            // console.log({ err, fields, files });
             if (err) return reject(err);
 
             /* Saving the file to the public folder. */
