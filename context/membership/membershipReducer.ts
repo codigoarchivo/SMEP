@@ -1,8 +1,8 @@
 import { MembershipState } from './';
-import { ICheck, ISession, ISubscription } from '../../interfaces';
+import { ISelectSession, ISelectSubscription, ISession, ISubscription } from '../../interfaces';
 
 type MembershipActionType =
-    | { type: '[Check] - all', payload: ICheck }
+    | { type: '[Check] - all', payload: ISelectSubscription | ISelectSession }
     | { type: '[Sub] - Subscription', payload: ISubscription[] }
     | { type: '[Ses] - Session', payload: ISession[] }
 
