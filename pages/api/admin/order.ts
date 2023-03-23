@@ -3,11 +3,11 @@ import { Session } from 'next-auth';
 import { getSession } from 'next-auth/react';
 import { db } from '../../../database';
 import { IOrder } from '../../../interfaces';
-import { Order } from '../../../models';
+import { OrderModel } from '../../../models';
 
 type membershipData =
   | { message: string }
-  | IOrder  
+  | IOrder
 
 export default function handle(req: NextApiRequest, res: NextApiResponse<membershipData>) {
 
@@ -28,7 +28,7 @@ const createMembership = async (req: NextApiRequest, res: NextApiResponse<member
 
   try {
     await db.connect();
-    const order = new Order({ ...req.body });
+    const order = new OrderModel(req.body);
     await order.save();
     await db.disconnect();
 
