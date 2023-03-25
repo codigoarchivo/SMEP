@@ -8,3 +8,11 @@ export interface IUser {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface IUserLem {
+    _id: string;
+    name: string;
+    email: string;
+    role: string;
+}
+
